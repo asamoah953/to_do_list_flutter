@@ -5,12 +5,14 @@ class PopupContainer extends StatelessWidget {
   final String onSave;
   final String onCancel;
   final Function(BuildContext)? addItem;
+  final Function(BuildContext)? canCel;
   const PopupContainer({
     super.key,
     required this.controller,
     required this.onSave,
     required this.onCancel,
     required this.addItem,
+    required this.canCel,
   });
 
   @override
@@ -38,13 +40,16 @@ class PopupContainer extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                ElevatedButton(
+                MaterialButton(
+                  color: const Color.fromARGB(255, 131, 101, 12),
                   onPressed: () => addItem,
+                  // ignore: sort_child_properties_last
                   child: Text(onSave),
-                  style: ButtonStyle(),
                 ),
-                ElevatedButton(
-                  onPressed: () => addItem,
+                SizedBox(width: 10),
+                MaterialButton(
+                  color: const Color.fromARGB(255, 131, 101, 12),
+                  onPressed: () => canCel,
                   child: Text(onCancel),
                 ),
               ],

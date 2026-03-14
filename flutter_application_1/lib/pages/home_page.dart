@@ -24,9 +24,13 @@ class _HomeState extends State<Home> {
     });
   }
 
-  void addItem(){
-
+  void addItem() {
+    setState(() {
+      todoList.add([controller.text, false]);
+    });
   }
+
+  void canCel() {}
 
   void floatIconFunction() {
     showDialog(
@@ -35,10 +39,11 @@ class _HomeState extends State<Home> {
           //creating the alert somewhere
           PopupContainer(
             controller: controller,
-            addItem: (context)=>addItem(),
+            addItem: (context) => addItem,
+            canCel: (context) => canCel,
             onSave: "save",
             onCancel: "cancel",
-            ),
+          ),
     );
   }
 
