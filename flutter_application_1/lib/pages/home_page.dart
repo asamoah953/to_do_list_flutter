@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/data/database.dart';
 import 'package:flutter_application_1/utils/popup_container.dart';
 import 'package:flutter_application_1/utils/todo_container.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -9,27 +11,31 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-List todoList = [
-  ["Drive to church", true],
-  ["Eat some snacks", true],
-  ["Drink some water", false],
-];
+final mybox = Hive.box('mybox');
+TodoList db = TodoList();
+// List todoList = [
+//   ["Drive to church", true],
+//   ["Eat some snacks", true],
+//   ["Drink some water", false],
+// ];
 
 final controller = TextEditingController();
 
 class _HomeState extends State<Home> {
   void onChanged(int index) {
     setState(() {
-      todoList[index][1] = !todoList[index][1];
+      db.todoList[index][1] = !db.todoList[index][1];
     });
+    db.updateData();
   }
 
   void addItem() {
     setState(() {
-      todoList.add([controller.text, false]);
+      db.todoList.add([controller.text, false]);
     });
     controller.clear();
     Navigator.pop(context);
+    db.updateData();
   }
 
   void canCel() {
@@ -38,8 +44,20 @@ class _HomeState extends State<Home> {
 
   void deleteItem(int index) {
     setState(() {
-      todoList.removeAt(index);
+      db.todoList.removeAt(index);
     });
+    db.updateData();
+  }
+
+  @override
+  void initState() {
+    if (mybox.get("TODOLIST") == null) {
+      db.initialData();
+    } else {
+      db.loadData();
+    }
+    // TODO: implement initState
+    super.initState();
   }
 
   void floatIconFunction() {
@@ -77,12 +95,12 @@ class _HomeState extends State<Home> {
       ),
 
       body: ListView.builder(
-        itemCount: todoList.length,
+        itemCount: db.todoList.length,
         itemBuilder: (context, index) => TodoContainer(
           onChanged: (context) => onChanged(index),
-          itemname: todoList[index][0],
-          checked: todoList[index][1],
-          deleteData:(context)=> deleteItem(index),
+          itemname: db.todoList[index][0],
+          checked: db.todoList[index][1],
+          deleteData: (context) => deleteItem(index),
         ),
       ),
     );
