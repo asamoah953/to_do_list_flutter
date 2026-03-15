@@ -15,7 +15,7 @@ List todoList = [
   ["Drink some water", false],
 ];
 
-TextEditingController controller = TextEditingController();
+final controller = TextEditingController();
 
 class _HomeState extends State<Home> {
   void onChanged(int index) {
@@ -28,9 +28,19 @@ class _HomeState extends State<Home> {
     setState(() {
       todoList.add([controller.text, false]);
     });
+    controller.clear();
+    Navigator.pop(context);
   }
 
-  void canCel() {}
+  void canCel() {
+    Navigator.pop(context);
+  }
+
+  void deleteItem(int index) {
+    setState(() {
+      todoList.removeAt(index);
+    });
+  }
 
   void floatIconFunction() {
     showDialog(
@@ -39,8 +49,8 @@ class _HomeState extends State<Home> {
           //creating the alert somewhere
           PopupContainer(
             controller: controller,
-            addItem: (context) => addItem,
-            canCel: (context) => canCel,
+            addItem: (context) => addItem(),
+            canCel: (context) => canCel(),
             onSave: "save",
             onCancel: "cancel",
           ),
@@ -69,9 +79,10 @@ class _HomeState extends State<Home> {
       body: ListView.builder(
         itemCount: todoList.length,
         itemBuilder: (context, index) => TodoContainer(
-          onChanged: (value) => onChanged(index),
+          onChanged: (context) => onChanged(index),
           itemname: todoList[index][0],
           checked: todoList[index][1],
+          deleteData:(context)=> deleteItem(index),
         ),
       ),
     );

@@ -6,6 +6,7 @@ class PopupContainer extends StatelessWidget {
   final String onCancel;
   final Function(BuildContext)? addItem;
   final Function(BuildContext)? canCel;
+
   const PopupContainer({
     super.key,
     required this.controller,
@@ -23,33 +24,31 @@ class PopupContainer extends StatelessWidget {
         color: Colors.amber,
         height: 200,
         width: 300,
-
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Center(
-              child: TextField(
-                controller: controller,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: "input to do item",
-                ),
+            TextField(
+              controller: controller,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: "input to do item",
               ),
             ),
+
+            const SizedBox(height: 20),
 
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 MaterialButton(
                   color: const Color.fromARGB(255, 131, 101, 12),
-                  onPressed: () => addItem,
-                  // ignore: sort_child_properties_last
+                  onPressed: () => addItem?.call(context),
                   child: Text(onSave),
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 MaterialButton(
                   color: const Color.fromARGB(255, 131, 101, 12),
-                  onPressed: () => canCel,
+                  onPressed: () => canCel?.call(context),
                   child: Text(onCancel),
                 ),
               ],
